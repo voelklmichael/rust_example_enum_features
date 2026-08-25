@@ -1,0 +1,67 @@
+components:
+  schemas:
+    ArchivedEvent:
+      properties:
+        data:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type:
+          const: Archived
+      required:
+      - type
+      - data
+      type: object
+    CreatedEvent:
+      properties:
+        data:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type:
+          const: Created
+      required:
+      - type
+      - data
+      type: object
+    DeletedEvent:
+      properties:
+        data:
+          properties:
+            id:
+              type: string
+            reason:
+              type: string
+          required:
+          - id
+          - reason
+          type: object
+        type:
+          const: Deleted
+      required:
+      - type
+      - data
+      type: object
+    Event:
+      discriminator:
+        mapping:
+          Archived: '#/components/schemas/ArchivedEvent'
+          Created: '#/components/schemas/CreatedEvent'
+          Deleted: '#/components/schemas/DeletedEvent'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/CreatedEvent'
+      - $ref: '#/components/schemas/DeletedEvent'
+      - $ref: '#/components/schemas/ArchivedEvent'
+info:
+  title: Rust enum feature example
+  version: 0.1.0
+openapi: 3.1.0
+paths: {}
+
