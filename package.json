@@ -7,10 +7,13 @@
     "validate:openapi": "node tools/validate-openapi.mjs",
     "generate": "npm run export:openapi && npm run validate:openapi && node tools/generate-typescript.mjs",
     "check:contracts": "node tools/check-contract-matrix.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test typescript/compatibility.test.ts"
   },
   "devDependencies": {
+    "@types/node": "^26.3.0",
     "openapi-typescript": "^7.9.1",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }
 }

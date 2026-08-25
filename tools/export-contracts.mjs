@@ -4,10 +4,11 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
 const root = resolve(new URL("..", import.meta.url).pathname);
-const cargo = process.env.CARGO_BIN ?? resolve(
+const toolchainBin = resolve(
   process.env.RUSTUP_HOME ?? resolve(process.env.HOME ?? root, ".rustup"),
-  "toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+  "toolchains/stable-x86_64-unknown-linux-gnu/bin",
 );
+const cargo = process.env.CARGO_BIN ?? resolve(toolchainBin, "cargo");
 const outputDirectory = resolve(root, "openapi");
 const builds = [
   ["no-features", ["--no-default-features"]],
@@ -31,7 +32,7 @@ function runCargo(features) {
       .join(" ");
     const child = spawn("/usr/bin/bash", ["-lc", command], {
       cwd: root,
-      env: process.env,
+      env: { ...process.env, PATH: `${toolchainBin}:${process.env.PATH ?? ""}` },
     });
     let stdout = "";
     let stderr = "";
@@ -46,7 +47,7 @@ function runCargo(features) {
       if (code === 0) {
         resolveOutput(stdout);
       } else {
-        reject(new Error(`cargo export failed (${code}): ${stderr}`));
+        reject(new Error(`cargo export failed (${code}): ${stderr}${stdout}`));
       }
     });
   });
