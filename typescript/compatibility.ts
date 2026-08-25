@@ -37,6 +37,14 @@ export function parseEvent(input: unknown): CompatibleEvent {
     return { type: "Deleted", data: input.data };
   }
 
+  if (input.type === "Archived" && isIdData(input.data)) {
+    return { type: "Archived", data: input.data };
+  }
+
+  if (input.type === "Restored" && isIdData(input.data)) {
+    return { type: "Restored", data: input.data };
+  }
+
   return {
     type: "Unknown",
     originalType: input.type,

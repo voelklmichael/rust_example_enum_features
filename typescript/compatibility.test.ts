@@ -45,6 +45,22 @@ test("maps a future variant to Unknown", () => {
   );
 });
 
+test("parses feature-enabled variants from the all-features contract", () => {
+  const archived = parseEvent({ type: "Archived", data: { id: "item-123" } });
+  const restored = parseEvent({ type: "Restored", data: { id: "item-123" } });
+
+  assert.deepEqual(archived, {
+    type: "Archived",
+    data: { id: "item-123" },
+  });
+  assert.deepEqual(restored, {
+    type: "Restored",
+    data: { id: "item-123" },
+  });
+  assert.equal(describeCompatibleEvent(archived), "archived item-123");
+  assert.equal(describeCompatibleEvent(restored), "restored item-123");
+});
+
 test("maps malformed input to Unknown", () => {
   const event = parseEvent({ type: "Deleted", data: { id: "item-123" } });
 
