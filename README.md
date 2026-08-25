@@ -53,7 +53,7 @@ The exact filenames are not essential; the important boundary is that Rust owns 
 Use Serde with an explicit tagged representation so the JSON contract is stable and easy for TypeScript to narrow:
 
 ```rust
-#[derive(Debug, Serialize, Deserialize, Openapi)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "type", content = "data")]
 pub enum Event {
     Created { id: String },
@@ -164,7 +164,7 @@ DeletedEvent:
           type: string
 ```
 
-The Rust export tool should emit this document from the same Rust definitions and enabled features. Keep checked-in OpenAPI files as snapshots so a contract change is visible in a diff.
+The Rust export tool should emit this document from the Rust definitions and enabled features. In this example, `openapi_document` is the explicit mapping from the compiled enum contract to OpenAPI; its Rust tests and the generated snapshots keep that mapping synchronized. Keep checked-in OpenAPI files as snapshots so a contract change is visible in a diff.
 
 Validate every snapshot with an OpenAPI validator before generating code.
 
