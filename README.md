@@ -33,9 +33,16 @@ The example starts with a Rust enum, serializes it to JSON, and deserializes tha
 |   |   |-- basic.ts
 |   |   |-- advanced.ts
 |   |   `-- all-features.ts
-|   `-- consumer.ts
+|   |-- consumer.ts
+|   |-- compatibility.ts
+|   `-- compatibility.test.ts
 |-- tools/
-|   `-- generate-typescript.mjs
+|   |-- export-contracts.mjs
+|   |-- generate-typescript.mjs
+|   |-- validate-openapi.mjs
+|   `-- check-contract-matrix.mjs
+|-- .github/
+|   `-- workflows/ci.yml
 `-- README.md
 ```
 

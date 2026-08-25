@@ -90,7 +90,26 @@ fn event_schema(name: &str, data_schema: Value) -> Value {
 
 #[cfg(test)]
 mod tests {
-    use super::Event;
+    use super::{openapi_document, Event};
+
+    fn event_refs() -> Vec<String> {
+        openapi_document()["components"]["schemas"]["Event"]["oneOf"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|entry| entry["$ref"].as_str().unwrap().to_owned())
+            .collect()
+    }
+
+    #[test]
+    fn created_round_trips() {
+        let event = Event::Created {
+            id: "item-123".into(),
+        };
+        let json = serde_json::to_string(&event).unwrap();
+        assert_eq!(json, r#"{"type":"Created","data":{"id":"item-123"}}"#);
+        assert_eq!(serde_json::from_str::<Event>(&json).unwrap(), event);
+    }
 
     #[test]
     fn deleted_round_trips_with_reason() {
@@ -101,5 +120,36 @@ mod tests {
         let json = serde_json::to_string(&event).unwrap();
         assert_eq!(json, r#"{"type":"Deleted","data":{"id":"item-123","reason":"retention policy"}}"#);
         assert_eq!(serde_json::from_str::<Event>(&json).unwrap(), event);
+    }
+
+    #[test]
+    fn openapi_includes_base_variants() {
+        let refs = event_refs();
+        assert!(refs.contains(&"#/components/schemas/CreatedEvent".into()));
+        assert!(refs.contains(&"#/components/schemas/DeletedEvent".into()));
+    }
+
+    #[cfg(feature = "basic")]
+    #[test]
+    fn archived_round_trips() {
+        let event = Event::Archived {
+            id: "item-123".into(),
+        };
+        let json = serde_json::to_string(&event).unwrap();
+        assert_eq!(json, r#"{"type":"Archived","data":{"id":"item-123"}}"#);
+        assert_eq!(serde_json::from_str::<Event>(&json).unwrap(), event);
+        assert!(event_refs().contains(&"#/components/schemas/ArchivedEvent".into()));
+    }
+
+    #[cfg(feature = "advanced")]
+    #[test]
+    fn restored_round_trips() {
+        let event = Event::Restored {
+            id: "item-123".into(),
+        };
+        let json = serde_json::to_string(&event).unwrap();
+        assert_eq!(json, r#"{"type":"Restored","data":{"id":"item-123"}}"#);
+        assert_eq!(serde_json::from_str::<Event>(&json).unwrap(), event);
+        assert!(event_refs().contains(&"#/components/schemas/RestoredEvent".into()));
     }
 }
