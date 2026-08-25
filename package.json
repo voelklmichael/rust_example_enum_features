@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate": "node tools/generate-typescript.mjs",
+    "export:openapi": "node tools/export-contracts.mjs",
+    "validate:openapi": "node tools/validate-openapi.mjs",
+    "generate": "npm run export:openapi && npm run validate:openapi && node tools/generate-typescript.mjs",
     "check:contracts": "node tools/check-contract-matrix.mjs",
     "typecheck": "tsc --noEmit"
   },
