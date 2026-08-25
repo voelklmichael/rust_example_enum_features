@@ -231,7 +231,13 @@ cargo run --bin export_openapi --all-features \
   > openapi/all-features.yaml
 ```
 
-Then invoke the generator once per snapshot. The generated types should show a predictable widening relationship:
+The complete pipeline can regenerate the snapshots, validate them, and generate all four TypeScript files:
+
+```sh
+npm run generate
+```
+
+Then inspect the generated contracts. They should show a predictable widening relationship:
 
 ```text
 no-features  subset of  basic  subset of  all-features
@@ -258,6 +264,8 @@ cargo test --all-features
 cargo run --bin export_openapi --no-default-features
 cargo run --bin export_openapi --all-features
 npm ci
+npm run export:openapi
+npm run validate:openapi
 npm run generate
 npm run check:contracts
 npm test
