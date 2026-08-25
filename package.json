@@ -1,0 +1,13 @@
+{
+  "name": "rust-example-enum-features",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node tools/generate-typescript.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.9.1",
+    "typescript": "^5.8.3"
+  }
+}
