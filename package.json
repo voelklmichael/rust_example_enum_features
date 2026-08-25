@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "generate": "node tools/generate-typescript.mjs",
+    "check:contracts": "node tools/check-contract-matrix.mjs",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

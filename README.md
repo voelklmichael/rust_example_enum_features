@@ -95,6 +95,8 @@ function assertNever(value: never): never {
 }
 ```
 
+For data received over the network, use a runtime boundary such as `typescript/compatibility.ts`. Its `parseEvent` function validates the known payloads and converts an unknown discriminator, malformed payload, or invalid input into an explicit `Unknown` result. This keeps forward compatibility from being confused with compile-time knowledge of the generated union.
+
 ## 3. Case study: add a Rust variant
 
 Add a new variant such as:
@@ -257,10 +259,11 @@ cargo run --bin export_openapi --no-default-features
 cargo run --bin export_openapi --all-features
 npm ci
 npm run generate
+npm run check:contracts
 npm test
 ```
 
-The final test suite should cover Rust JSON snapshots, OpenAPI validation, deterministic generation, TypeScript compilation, and representative runtime handling of an unknown variant.
+The final test suite should cover Rust JSON snapshots, OpenAPI validation, deterministic generation, TypeScript compilation, the contract matrix check, and representative runtime handling of an unknown variant.
 
 ## Expected outcome
 
